@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 
-void drow(void* wrd,int w,int h)
+void draw(void* wrd,int w,int h)
 {
 	//Temp World
 	char (*world)[w]=wrd;
@@ -21,20 +21,20 @@ void drow(void* wrd,int w,int h)
         }
 }
 
-void evolution(void *wrd,int w,int h)
+void evolution(void* wrd,int w,int h)
 {
 	char (*world)[w]=wrd;
 	char newWorld[h][w];
 
-	for(int y=0; y<h ; y++)
+	for(int x=0; x<w ; x++)
 	{
-		for(int x=0;x<w;x++)
+		for(int y=0; y<h;y++)
 		{
 			//state cell live count
 			int live = 0;
 
-			for(int yi=y-1; yi<y+1; yi++)
-				for(int xi=x-1; xi<x+1; xi++)
+			for(int xi=x-1; xi<=x+1; xi++)
+				for(int yi=y-1; yi<=y+1; yi++)
 					if(world[(yi+h)%h][(xi+w)%w])
 						live++;
 			if(world[y][x])
@@ -44,25 +44,28 @@ void evolution(void *wrd,int w,int h)
 		}
 	}
 
-	world = newWorld;
+	//world = newWorld;
+	for(int y=0; y<h; y++)
+		for(int x=0; x<w; x++)
+			world[y][x]=newWorld[y][x];
 }
 
 int main()
 {
 	//Initilze Value
-	int w = 30;//Length culomns
-	int h = 30;//Length rows
+	int w = 60;//Length culomns
+	int h = 60;//Length rows
 	char world[h][w];//My World
 
 	//Initilize new Matrix World
-	for(int i=0; i<h; i++)
-		for(int j=0; j<w; j++)
-			world[i][j]=rand() < RAND_MAX / 10 ? 1 : 0 ;
+	for (int i = 0; i < h; i++)
+		for (int j = 0; j < w; j++)
+			world[i][j] = rand() < RAND_MAX / 10;
 
 	for(;;)
 	{
 		//Show State matrix
-		drow(world,w,h);
+		draw(world,w,h);
 
 		//Check Life cell
 		evolution(world,w,h);
